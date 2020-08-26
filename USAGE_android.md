@@ -133,6 +133,7 @@ adb shell "setprop debug.gfxrecon.log_level 'warning'"
 
 #### Supported Options
 
+##### EN
 Options with the BOOL type accept the following values:
 
 * A case-insensitive string value 'true' or a non-zero integer value indicate true.
@@ -161,6 +162,8 @@ Memory Tracking Mode | debug.gfxrecon.memory_tracking_mode | STRING | Specifies 
 Page Guard Copy on Map | debug.gfxrecon.page_guard_copy_on_map | BOOL | When the `page_guard` memory tracking mode is enabled, copies the content of the mapped memory to the shadow memory immediately after the memory is mapped. Default is: `true`
 Page Guard Separate Read Tracking | debug.gfxrecon.page_guard_separate_read | BOOL | When the `page_guard` memory tracking mode is enabled, copies the content of pages accessed for read from mapped memory to shadow memory on each read. Can overwrite unprocessed shadow memory content when an application is reading from and writing to the same page. Default is: `true`
 
+##### CN
+
 Option | Property | Type | Description(CN)
 ------| ------------- |------|-------------
 捕获文件名 | debug.gfxrecon.capture_file | STRING | 指定捕获文件的保存位置和名字.  默认值: `/sdcard/gfxrecon_capture.gfxr`
@@ -170,16 +173,16 @@ Option | Property | Type | Description(CN)
 捕获文件写后清缓存 | debug.gfxrecon.capture_file_flush | BOOL | 每个packet被写进捕获文件后，刷新输出流.  默认值: `false`
 日志级别 | debug.gfxrecon.log_level | STRING | 指定最高的日志输出级别. 可选项: `debug`, `info`, `warning`, `error`, and `fatal`.  默认值: `info`
 日志输出到终端 | debug.gfxrecon.log_output_to_console | BOOL | 日志信息是否输出到Logcat. 默认值: `true`
-Log File | debug.gfxrecon.log_file | STRING | When set, log messages will be written to a file at the specified path. Default is: Empty string (file logging disabled).
-Log Detailed | debug.gfxrecon.log_detailed | BOOL | Include name and line number from the file responsible for the log message. Default is: `false`
-Log Allow Indents | debug.gfxrecon.log_allow_indents | BOOL | Apply additional indentation formatting to log messages. Default is: `false`
-Log Break on Error | debug.gfxrecon.log_break_on_error | BOOL | Trigger a debug break when logging an error. Default is: `false`
-Log File Create New | debug.gfxrecon.log_file_create_new | BOOL | Specifies that log file initialization should overwrite an existing file when true, or append to an existing file when false. Default is: `true`
-Log File Flush After Write | debug.gfxrecon.log_file_flush_after_write | BOOL | Flush the log file to disk after each write when true. Default is: `false`
-Log File Keep Open | debug.gfxrecon.log_file_keep_open | BOOL | Keep the log file open between log messages when true, or close and reopen the log file for each message when false. Default is: `true`
-Memory Tracking Mode | debug.gfxrecon.memory_tracking_mode | STRING | Specifies the memory tracking mode to use for detecting modifications to mapped Vulkan memory objects. Available options are: `page_guard`, `assisted`, and `unassisted`. Default is `page_guard` <ul><li>`page_guard` tracks modifications to individual memory pages, which are written to the capture file on calls to `vkFlushMappedMemoryRanges`, `vkUnmapMemory`, and `vkQueueSubmit`. Tracking modifications requires allocating shadow memory for all mapped memory.</li><li>`assisted` expects the application to call `vkFlushMappedMemoryRanges` after memory is modified; the memory ranges specified to the `vkFlushMappedMemoryRanges` call will be written to the capture file during the call.</li><li>`unassisted` writes the full content of mapped memory to the capture file on calls to `vkUnmapMemory` and `vkQueueSubmit`. It is very inefficient and may be unusable with real-world applications that map large amounts of memory.</li></ul>
-Page Guard Copy on Map | debug.gfxrecon.page_guard_copy_on_map | BOOL | When the `page_guard` memory tracking mode is enabled, copies the content of the mapped memory to the shadow memory immediately after the memory is mapped. Default is: `true`
-Page Guard Separate Read Tracking | debug.gfxrecon.page_guard_separate_read | BOOL | When the `page_guard` memory tracking mode is enabled, copies the content of pages accessed for read from mapped memory to shadow memory on each read. Can overwrite unprocessed shadow memory content when an application is reading from and writing to the same page. Default is: `true`
+日志文件 | debug.gfxrecon.log_file | STRING | 日志输出到文件绝对路径  默认值: 不输出到文件.
+日志详细 | debug.gfxrecon.log_detailed | BOOL | 包含名字和行号的日志信息使用额外缩进 默认值: `false`
+日志允许缩进 | debug.gfxrecon.log_allow_indents | BOOL | 日志信息的额外缩进. 默认值: `false`
+日志错误触发断点调试 | debug.gfxrecon.log_break_on_error | BOOL | 日志错误触发调试断点. 默认值: `false`
+新建日志文件 | debug.gfxrecon.log_file_create_new | BOOL | 指定日志文件初始化覆盖现有文件（true），或者追加到现有文件（false）. 默认值: `true`
+日志文件写后立刻清缓存 | debug.gfxrecon.log_file_flush_after_write | BOOL | 是否立刻刷新输出流. 默认值: `false`
+日志文件保持打开状态 | debug.gfxrecon.log_file_keep_open | BOOL | 保持日志文件始终打开在多个日志信息之间（true），重新打开日志文件对于每个日志信息（false）. 默认值: `true`
+内存跟踪模型 | debug.gfxrecon.memory_tracking_mode | STRING | 指定用于检测对映射的Vulkan内存对象的修改的内存跟踪模式。可选值: `page_guard`, `assisted`, and `unassisted`. 默认值： `page_guard` <ul><li>`page_guard` 该模型跟踪独立的内存页, 当函数 `vkFlushMappedMemoryRanges`, `vkUnmapMemory`, 和 `vkQueueSubmit`被调用时，写入捕获文件. 跟踪修改需要为映射内存分配shadow内存。</li><li>`assisted` 该模型希望应用在内存修改后，立刻调用函数 `vkFlushMappedMemoryRanges`，写入捕获文件.</li><li>`unassisted` 该模式下调用vkUnmapMemory和vkQueueSubmit时，将映射内存写入捕获文件。它非常的低效，可能无法映射大量内存的实际应用程序。</li></ul>
+内存页保护映射拷贝 | debug.gfxrecon.page_guard_copy_on_map | BOOL | 当使用page_guard内存跟踪模式时，映射内存后，立刻将内存的内容拷贝到shadow内存中，默认值: `true`
+内存页保护分开读 | debug.gfxrecon.page_guard_separate_read | BOOL | 当使用page_guard内存跟踪模式时，每次读取时，将从映射内存中读取页面内容复制到Shadow内存. 默认值: `true`
 
 #### Settings File
 
