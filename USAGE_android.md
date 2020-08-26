@@ -141,7 +141,7 @@ Options with the BOOL type accept the following values:
 The capture layer will generate a warning message for unrecognized or invalid
 option values.
 
-Option | Property | Type | Description
+Option | Property | Type | Description(EN)
 ------| ------------- |------|-------------
 Capture File Name | debug.gfxrecon.capture_file | STRING | Path to use when creating the capture file.  Default is: `/sdcard/gfxrecon_capture.gfxr`
 Capture Specific Frames | debug.gfxrecon.capture_frames | STRING | Specify one or more comma-separated frame ranges to capture.  Each range will be written to its own file.  A frame range can be specified as a single value, to specify a single frame to capture, or as two hyphenated values, to specify the first and last frame to capture.  Frame ranges should be specified in ascending order and cannot overlap. Note that frame numbering is 1-based (i.e. the first frame is frame 1).  Example: `200,301-305` will create two capture files, one containing a single frame and one containing five frames.  Default is: Empty string (all frames are captured).
@@ -150,6 +150,26 @@ Capture File Timestamp | debug.gfxrecon.capture_file_timestamp | BOOL | Add a ti
 Capture File Flush After Write | debug.gfxrecon.capture_file_flush | BOOL | Flush output stream after each packet is written to the capture file.  Default is: `false`
 Log Level | debug.gfxrecon.log_level | STRING | Specify the highest level message to log.  Options are: `debug`, `info`, `warning`, `error`, and `fatal`.  The specified level and all levels listed after it will be enabled for logging.  For example, choosing the `warning` level will also enable the `error` and `fatal` levels. Default is: `info`
 Log Output to Console | debug.gfxrecon.log_output_to_console | BOOL | Log messages will be written to Logcat. Default is: `true`
+Log File | debug.gfxrecon.log_file | STRING | When set, log messages will be written to a file at the specified path. Default is: Empty string (file logging disabled).
+Log Detailed | debug.gfxrecon.log_detailed | BOOL | Include name and line number from the file responsible for the log message. Default is: `false`
+Log Allow Indents | debug.gfxrecon.log_allow_indents | BOOL | Apply additional indentation formatting to log messages. Default is: `false`
+Log Break on Error | debug.gfxrecon.log_break_on_error | BOOL | Trigger a debug break when logging an error. Default is: `false`
+Log File Create New | debug.gfxrecon.log_file_create_new | BOOL | Specifies that log file initialization should overwrite an existing file when true, or append to an existing file when false. Default is: `true`
+Log File Flush After Write | debug.gfxrecon.log_file_flush_after_write | BOOL | Flush the log file to disk after each write when true. Default is: `false`
+Log File Keep Open | debug.gfxrecon.log_file_keep_open | BOOL | Keep the log file open between log messages when true, or close and reopen the log file for each message when false. Default is: `true`
+Memory Tracking Mode | debug.gfxrecon.memory_tracking_mode | STRING | Specifies the memory tracking mode to use for detecting modifications to mapped Vulkan memory objects. Available options are: `page_guard`, `assisted`, and `unassisted`. Default is `page_guard` <ul><li>`page_guard` tracks modifications to individual memory pages, which are written to the capture file on calls to `vkFlushMappedMemoryRanges`, `vkUnmapMemory`, and `vkQueueSubmit`. Tracking modifications requires allocating shadow memory for all mapped memory.</li><li>`assisted` expects the application to call `vkFlushMappedMemoryRanges` after memory is modified; the memory ranges specified to the `vkFlushMappedMemoryRanges` call will be written to the capture file during the call.</li><li>`unassisted` writes the full content of mapped memory to the capture file on calls to `vkUnmapMemory` and `vkQueueSubmit`. It is very inefficient and may be unusable with real-world applications that map large amounts of memory.</li></ul>
+Page Guard Copy on Map | debug.gfxrecon.page_guard_copy_on_map | BOOL | When the `page_guard` memory tracking mode is enabled, copies the content of the mapped memory to the shadow memory immediately after the memory is mapped. Default is: `true`
+Page Guard Separate Read Tracking | debug.gfxrecon.page_guard_separate_read | BOOL | When the `page_guard` memory tracking mode is enabled, copies the content of pages accessed for read from mapped memory to shadow memory on each read. Can overwrite unprocessed shadow memory content when an application is reading from and writing to the same page. Default is: `true`
+
+Option | Property | Type | Description(CN)
+------| ------------- |------|-------------
+捕获文件名 | debug.gfxrecon.capture_file | STRING | 指定捕获文件的保存位置和名字.  默认值: `/sdcard/gfxrecon_capture.gfxr`
+捕获指定帧 | debug.gfxrecon.capture_frames | STRING | 指定一个或多个要捕获的以逗号隔开的帧范围。比如：200,301-305将创建两个捕获文件，第一个包含单帧200，第二个包含5个帧，从301到305.  默认值：抓所有帧.
+捕获文件的压缩格式 | debug.gfxrecon.capture_compression_type | STRING | 指定捕获文件的压缩格式.  有效值: `LZ4`, `ZLIB`, `ZSTD`, and `NONE`. 默认值: `LZ4`
+捕获文件名的时间戳 | debug.gfxrecon.capture_file_timestamp | BOOL | 是否给捕获文件名添加时间戳.  默认值: `true`
+捕获文件写后清缓存 | debug.gfxrecon.capture_file_flush | BOOL | 每个packet被写进捕获文件后，刷新输出流.  默认值: `false`
+日志级别 | debug.gfxrecon.log_level | STRING | 指定最高的日志输出级别. 可选项: `debug`, `info`, `warning`, `error`, and `fatal`.  默认值: `info`
+日志输出到终端 | debug.gfxrecon.log_output_to_console | BOOL | 日志信息是否输出到Logcat. 默认值: `true`
 Log File | debug.gfxrecon.log_file | STRING | When set, log messages will be written to a file at the specified path. Default is: Empty string (file logging disabled).
 Log Detailed | debug.gfxrecon.log_detailed | BOOL | Include name and line number from the file responsible for the log message. Default is: `false`
 Log Allow Indents | debug.gfxrecon.log_allow_indents | BOOL | Apply additional indentation formatting to log messages. Default is: `false`
